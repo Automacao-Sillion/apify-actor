@@ -1,0 +1,20 @@
+# Dependências e storages locais (não vão pro repositório)
+node_modules/
+storage/
+apify_storage/
+crawlee_storage/
+.venv/
+__pycache__/
+*.pyc
+
+# Saídas/temporários gerados em execução local
+relatorios/
+email/
+state*.tgz
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# OBS: a pasta seed/ (historico.json + equip/) DEVE ir pro repositório.

@@ -1,0 +1,16 @@
+{
+  "actorSpecification": 1,
+  "name": "robo-sitrack-equipamentos",
+  "title": "Robô Sitrack - Equipamentos em Depósito",
+  "description": "Loga no portal Sitrack, exporta a Lista de Equipamentos em CSV, gera o relatório xlsx e o corpo do email, e guarda tudo no Key-Value store. Persiste o histórico entre execuções.",
+  "version": "1.0",
+  "dockerfile": "../Dockerfile",
+  "input": "./input_schema.json",
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "title": "Resumo das execuções",
+      "views": {}
+    }
+  }
+}

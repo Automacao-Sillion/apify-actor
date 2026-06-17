@@ -1,0 +1,14 @@
+{
+  "name": "robo-sitrack-equipamentos-apify",
+  "version": "1.0.0",
+  "description": "Actor Apify: loga no Sitrack, exporta a Lista de Equipamentos em CSV, roda os scripts Python (xlsx + corpo do email) e guarda os resultados no Key-Value store. Persiste o histórico entre execuções.",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "dependencies": {
+    "apify": "^3.2.6",
+    "playwright": "^1.45.0"
+  }
+}

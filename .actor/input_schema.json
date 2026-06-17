@@ -1,0 +1,54 @@
+{
+  "title": "Configuração do Robô Sitrack",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "sitrackUser": {
+      "title": "Usuário Sitrack",
+      "type": "string",
+      "description": "Usuário do portal Sitrack (ex.: financeiro2@sillion.com.br).",
+      "editor": "textfield",
+      "default": "financeiro2@sillion.com.br"
+    },
+    "sitrackPass": {
+      "title": "Senha Sitrack",
+      "type": "string",
+      "description": "Senha do portal. Guarde como secret (ícone de cadeado).",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    "headless": {
+      "title": "Headless",
+      "type": "boolean",
+      "description": "Rodar o navegador sem interface. Mantenha true em produção; use false só para depurar com live view.",
+      "default": true
+    },
+    "resetState": {
+      "title": "Zerar histórico",
+      "type": "boolean",
+      "description": "Se true, ignora o histórico salvo e começa do zero (use apenas para reinicializar).",
+      "default": false
+    },
+    "enviarEmail": {
+      "title": "Enviar email",
+      "type": "boolean",
+      "description": "Se true, envia o email via N8N ao final. Deixe false para testar a extração/geração sem disparar email.",
+      "default": true
+    },
+    "emailReport": {
+      "title": "Destinatário",
+      "type": "string",
+      "description": "Email que recebe o relatório.",
+      "editor": "textfield",
+      "default": "guilherme.santos@sillion.com.br"
+    },
+    "n8nMcpUrl": {
+      "title": "URL do endpoint N8N (MCP)",
+      "type": "string",
+      "description": "Endpoint MCP do N8N que envia o email (tool Call_Enviar_email_report).",
+      "editor": "textfield",
+      "default": "https://sbrgui.app.n8n.cloud/mcp/805ad43f-af5f-4718-8c83-5fbd433a863f"
+    }
+  },
+  "required": ["sitrackUser", "sitrackPass"]
+}
