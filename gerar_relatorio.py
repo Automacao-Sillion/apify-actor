@@ -115,7 +115,11 @@ def carregar_dados(caminho_csv: str) -> pd.DataFrame:
 
 def construir_analise(df: pd.DataFrame):
     cliente = df["CLIENTE (NOME)"].astype(str).str.strip().str.upper()
-    dff = df[cliente.str.startswith(FILTRO_CLIENTE_PREFIXO.upper())]
+    # C.I. exceto os que estão no "Depósito Trânsito a Base BR": o Base BR é contado
+    # na sua linha dedicada (base_br). Sem este filtro, equipamentos C.I. que estão
+    # no Base BR seriam contados 2x (na seção C.I. e na linha Base BR), inflando o
+    # Total/STD/CAMERAS em relação à contagem única do gerar_email (movimentações).
+    dff = df[cliente.str.startswith(FILTRO_CLIENTE_PREFIXO.upper()) & (df["NOME"] != BASE_BR_NOME)]
     nome = dff["NOME"].replace("", ROTULO_VAZIO).fillna(ROTULO_VAZIO)
     modelo = dff["MODELO"].fillna("").replace("", "(sem modelo)")
     tab = pd.crosstab(nome, modelo)
