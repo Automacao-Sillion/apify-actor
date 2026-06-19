@@ -336,21 +336,21 @@ await store.setValue('RESUMO', resumo); // JSON
 
 console.log('[ok] REPORT_XLSX / REPORT_HTML / RESUMO gravados no Key-Value store.');
 
-// 4.1) Enviar o email via N8N (mesmo endpoint do enviar_email.py) -------------
-if (ENVIAR_EMAIL) {
-    const assunto = resumo.assunto || ('Relatório Diário - Equipamentos em Depósito (' + resumo.data + ')');
-    await enviarViaN8N({
-        assunto,
-        html: htmlStr,
-        fileName: resumo.arquivo_xlsx,
-        xlsxBase64: xlsxBuf.toString('base64'),
-    });
-} else {
-    console.log('[info] enviarEmail=false: pulando envio (apenas KV store).');
-}
-
-// 5) Persistir histórico atualizado (STATE) ------------------------------------
+// 4.1) Persistir histórico (STATE) ANTES de enviar o email -------------------
+//      Garante que a cadeia diária (06-18 vira base de 06-19) NÃO quebra mesmo
+//      que o envio do email falhe (N8N fora do ar, etc.).
 try {
+    // Poda: mantém só o snapshot equip MAIS RECENTE (evita encher o storage).
+    // A comparação diária só precisa do dia anterior; a tabela histórica vem do
+    // historico.json (pequeno, acumulado). Então 1 snapshot equip basta.
+    try {
+        const KEEP = 1;
+        const eq = fs.readdirSync(PASTA_EQUIP).filter((f) => f.endsWith('.json')).sort();
+        const remover = eq.slice(0, Math.max(0, eq.length - KEEP));
+        for (const f of remover) fs.rmSync(path.join(PASTA_EQUIP, f), { force: true });
+        if (remover.length) console.log('[poda] equip: removidos ' + remover.length + ', mantido ' + (eq.length - remover.length) + ' (mais recente).');
+    } catch (e) { console.log('[poda] equip falhou:', e.message); }
+
     const tgz = path.join(__dirname, 'state_out.tgz');
     const alvos = [];
     if (fs.existsSync(HIST_JSON)) alvos.push('historico.json');
@@ -364,6 +364,19 @@ try {
     }
 } catch (e) {
     console.log('[state] Falha ao persistir histórico:', e.message);
+}
+
+// 4.2) Enviar o email via N8N (mesmo endpoint do enviar_email.py) -------------
+if (ENVIAR_EMAIL) {
+    const assunto = resumo.assunto || ('Relatório Diário - Equipamentos em Depósito (' + resumo.data + ')');
+    await enviarViaN8N({
+        assunto,
+        html: htmlStr,
+        fileName: resumo.arquivo_xlsx,
+        xlsxBase64: xlsxBuf.toString('base64'),
+    });
+} else {
+    console.log('[info] enviarEmail=false: pulando envio (apenas KV store).');
 }
 
 // Resumo desta execução no dataset (auditoria)
