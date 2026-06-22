@@ -110,7 +110,9 @@ if (!SENHA) {
     throw new Error('Senha do Sitrack não informada (input.sitrackPass / secret).');
 }
 
-const store = await Actor.openKeyValueStore();
+// Store NOMEADO: persiste entre execuções (o store padrão é novo a cada run e
+// perdia o histórico — causava o relatório "preso" no dia da semente, 06-17).
+const store = await Actor.openKeyValueStore('sitrack-estado');
 
 // Garante a estrutura de pastas que os scripts Python esperam.
 for (const d of [PASTA_RELAT, PASTA_EMAIL, PASTA_EQUIP, PASTA_TMPL]) {
